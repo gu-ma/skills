@@ -6,7 +6,7 @@ platforms: [macos, linux]
 metadata:
   hermes:
     tags: [code-analysis, semantic-search, llm-tldr, ripgrep, token-efficiency]
-    category: developer-tools
+    category: productivity
     requires_toolsets: [terminal]
 ---
 
