@@ -52,7 +52,9 @@ Prefer `llm-tldr` when the task is:
    - Use `tldr context <path-or-symbol>` for a structural summary of a file, function, or module.
    - Use `tldr semantic "<natural language query>"` when the user describes behavior rather than exact names.
    - Use `tldr impact <path-or-symbol>` before edits, refactors, or dependency-sensitive changes.
+   - Use `tldr structure <path>` to get a broad module/file inventory, especially for Go repos where `context` can sometimes be too shallow.
    - For debugging-oriented questions, use `tldr semantic`, `tldr context`, or narrower follow-up commands to trace likely control flow, data flow, and related call paths.
+   - Pass one target path per command. If you want summaries for multiple directories like `api/` and `website/`, call `tldr structure` separately for each path instead of passing multiple positional paths.
 7. If needed, combine with `rg`:
    - use `rg` first to narrow candidate files
    - then use `tldr` on the best candidates to build a concise map
@@ -68,6 +70,8 @@ Prefer `llm-tldr` when the task is:
 - `llm-tldr` is not a replacement for `rg`. Do not use it for simple literal or regex lookup when `rg` is faster and clearer.
 - Do not assume the repo is already indexed. If results look incomplete, run `tldr warm .` first.
 - Some AST-based commands (`context`, sometimes `semantic`) can fail or degrade when unrelated files in the repo have syntax errors. If that happens, fall back to `tldr structure`, `tldr extract`, or `tldr search` on narrower paths instead of treating the whole tool as broken.
+- `tldr context <path>` can be low-value if you only pass a file path with no symbol or the parser cannot recover useful structure from that language/file. If the output is too thin, switch to `tldr structure <dir>` for a broader map, then inspect exact files with normal file-reading tools.
+- `tldr structure` expects a single target path per invocation. If you want both `api/` and `website/`, run two separate commands rather than passing multiple directories.
 - Do not over-read raw files after getting a good structural summary; that defeats the token-saving goal.
 - `uvx --from llm-tldr tldr ...` working does not mean bare `tldr` is installed in PATH. In ephemeral shells, keep using the full `uvx --from llm-tldr tldr ...` form for every command unless `tldr --help` succeeds directly.
 - If the CLI is unavailable, fall back to normal file inspection and available file-search tools rather than failing silently. Use `rg` only when it actually exists in the environment.
